@@ -12,18 +12,18 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Compare file with repository variable
+      - name: Compare class.txt with repository variable
         env:
           REPO_VAR: ${{ vars.NathanK }}
         run: |
-          FILE_VALUE=$(cat comparefile.txt)
+          FILE_VALUE=$(cat class.txt)
 
           if [ "$FILE_VALUE" != "$REPO_VAR" ]; then
-            echo "❌ File value does not match repository variable NathanK"
+            echo "❌ class.txt does not match repository variable NathanK"
             exit 1
           fi
 
-          echo "✅ File matches repository variable NathanK"
+          echo "✅ class.txt matches repository variable NathanK"
 
   compare_with_secret:
     name: Job 2 - Compare file with secret
@@ -33,21 +33,21 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Compare file with secret
+      - name: Compare secret file with secret
         env:
           SECRET_VALUE: ${{ secrets.MY_SECRET }}
         run: |
           FILE_VALUE=$(cat secretfile.txt)
 
           if [ "$FILE_VALUE" != "$SECRET_VALUE" ]; then
-            echo "❌ File value does not match secret"
+            echo "❌ Secret file does not match secret"
             exit 1
           fi
 
-          echo "✅ File matches secret"
+          echo "✅ Secret file matches secret"
 
   success_job:
-    name: Job 3 - Run on success
+    name: Job 3 - Run only if Job 1 and Job 2 succeed
     runs-on: ubuntu-latest
     needs:
       - compare_with_variable
@@ -57,14 +57,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Confirm success and print safe values
+      - name: Print safe values and confirm success
         env:
           REPO_VAR: ${{ vars.NathanK }}
         run: |
-          FILE_VALUE=$(cat comparefile.txt)
+          FILE_VALUE=$(cat class.txt)
 
           echo "🎉 All checks passed"
-          echo "File value: $FILE_VALUE"
-          echo "Repository variable value: $REPO_VAR"
-          echo "Secret check succeeded (secret not printed)"
 
