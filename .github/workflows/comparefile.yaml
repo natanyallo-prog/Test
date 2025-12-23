@@ -1,0 +1,70 @@
+name: Compare files with repo variable and secret
+
+on:
+  workflow_dispatch:
+
+jobs:
+  compare_with_variable:
+    name: Job 1 - Compare file with repository variable
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Compare file with repository variable
+        env:
+          REPO_VAR: ${{ vars.NathanK }}
+        run: |
+          FILE_VALUE=$(cat comparefile.txt)
+
+          if [ "$FILE_VALUE" != "$REPO_VAR" ]; then
+            echo "❌ File value does not match repository variable NathanK"
+            exit 1
+          fi
+
+          echo "✅ File matches repository variable NathanK"
+
+  compare_with_secret:
+    name: Job 2 - Compare file with secret
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Compare file with secret
+        env:
+          SECRET_VALUE: ${{ secrets.MY_SECRET }}
+        run: |
+          FILE_VALUE=$(cat secretfile.txt)
+
+          if [ "$FILE_VALUE" != "$SECRET_VALUE" ]; then
+            echo "❌ File value does not match secret"
+            exit 1
+          fi
+
+          echo "✅ File matches secret"
+
+  success_job:
+    name: Job 3 - Run on success
+    runs-on: ubuntu-latest
+    needs:
+      - compare_with_variable
+      - compare_with_secret
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Confirm success and print safe values
+        env:
+          REPO_VAR: ${{ vars.NathanK }}
+        run: |
+          FILE_VALUE=$(cat comparefile.txt)
+
+          echo "🎉 All checks passed"
+          echo "File value: $FILE_VALUE"
+          echo "Repository variable value: $REPO_VAR"
+          echo "Secret check succeeded (secret not printed)"
+
