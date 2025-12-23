@@ -27,5 +27,5 @@ jobs:
       - name: Print data
         run: |
           python --version
-          echo ${{ matrix.person }
+          echo ${{ matrix.person }}
           
