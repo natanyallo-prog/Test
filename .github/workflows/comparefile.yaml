@@ -37,7 +37,7 @@ jobs:
         env:
           SECRET_VALUE: ${{ secrets.MY_SECRET }}
         run: |
-          FILE_VALUE=$(cat secretfile.txt)
+          FILE_VALUE=$(cat class.txt)
 
           if [ "$FILE_VALUE" != "$SECRET_VALUE" ]; then
             echo "❌ Secret file does not match secret"
