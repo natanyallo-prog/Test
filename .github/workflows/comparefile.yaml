@@ -20,7 +20,7 @@ jobs:
 
           if [ "$FILE_VALUE" != "$REPO_VAR" ]; then
             echo "❌ class.txt does not match repository variable NathanK"
-            exit 0
+            exit 1
           fi
 
           echo "✅ class.txt matches repository variable NathanK"
@@ -41,7 +41,7 @@ jobs:
 
           if [ "$FILE_VALUE" != "$SECRET_VALUE" ]; then
             echo "❌ Secret file does not match secret"
-            exit 0
+            exit 1
           fi
 
           echo "✅ Secret file matches secret"
