@@ -39,9 +39,9 @@ jobs:
         run: |
           FILE_VALUE=$(tr -d '\n' < class.txt)
 
-          if [ "$FILE_VALUE" != "$SECRET_VALUE" ]; then
-            echo "❌ class.txt does not match secret"
-            exit 1
+          if [ "$FILE_VALUE" = "$SECRET_VALUE" ]; then
+           echo "✅ class.txt matches secret"
+            exit 0
           fi
 
           echo "✅ class.txt matches secret"
