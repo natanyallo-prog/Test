@@ -1,10 +1,10 @@
-name: Compare files with repo variable and secret
+name: Compare files with variable and secret
 
 on:
   workflow_dispatch:
 
 jobs:
-  compare_with_variable:
+  job1_compare_variable:
     name: Job 1 - Compare file with repository variable
     runs-on: ubuntu-latest
 
@@ -12,20 +12,20 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Compare class.txt with repository variable
+      - name: Compare class.txt with repo variable
         env:
           REPO_VAR: ${{ vars.NathanK }}
         run: |
-          FILE_VALUE=$(cat class.txt)
+          FILE_VALUE=$(tr -d '\n' < class.txt)
 
           if [ "$FILE_VALUE" != "$REPO_VAR" ]; then
-            echo "❌ class.txt does not match repository variable NathanK"
+            echo "❌ class.txt does not match repository variable"
             exit 1
           fi
 
-          echo "✅ class.txt matches repository variable NathanK"
+          echo "✅ class.txt matches repository variable"
 
-  compare_with_secret:
+  job2_compare_secret:
     name: Job 2 - Compare file with secret
     runs-on: ubuntu-latest
 
@@ -33,35 +33,37 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Compare secret file with secret
+      - name: Compare secret.txt with secret
         env:
           SECRET_VALUE: ${{ secrets.MY_SECRET }}
         run: |
-          FILE_VALUE=$(cat class.txt)
+          FILE_VALUE=$(tr -d '\n' < secret.txt)
 
           if [ "$FILE_VALUE" != "$SECRET_VALUE" ]; then
-            echo "❌ Secret file does not match secret"
+            echo "❌ secret.txt does not match secret"
             exit 1
           fi
 
-          echo "✅ Secret file matches secret"
+          echo "✅ secret.txt matches secret"
 
-  success_job:
+  job3_success:
     name: Job 3 - Run only if Job 1 and Job 2 succeed
     runs-on: ubuntu-latest
     needs:
-      - compare_with_variable
-      - compare_with_secret
+      - job1_compare_variable
+      - job2_compare_secret
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Print safe values and confirm success
+      - name: Print values and confirm success
         env:
           REPO_VAR: ${{ vars.NathanK }}
         run: |
-          FILE_VALUE=$(cat class.txt)
+          FILE_VALUE=$(tr -d '\n' < class.txt)
 
-          echo "🎉 All checks passed"
-
+          echo "🎉 All jobs succeeded"
+          echo "File value (class.txt): $FILE_VALUE"
+          echo "Repository variable (NathanK): $REPO_VAR"
+          echo "Secret comparison succeeded (secret not printed)"
