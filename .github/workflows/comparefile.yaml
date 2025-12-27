@@ -33,18 +33,18 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Compare secret.txt with secret
+      - name: Compare class.txt with secret
         env:
           SECRET_VALUE: ${{ secrets.MY_SECRET }}
         run: |
-          FILE_VALUE=$(tr -d '\n' < secret.txt)
+          FILE_VALUE=$(tr -d '\n' < class.txt)
 
           if [ "$FILE_VALUE" != "$SECRET_VALUE" ]; then
-            echo "❌ secret.txt does not match secret"
+            echo "❌ class.txt does not match secret"
             exit 1
           fi
 
-          echo "✅ secret.txt matches secret"
+          echo "✅ class.txt matches secret"
 
   job3_success:
     name: Job 3 - Run only if Job 1 and Job 2 succeed
